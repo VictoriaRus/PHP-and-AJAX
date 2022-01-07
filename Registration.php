@@ -21,24 +21,48 @@ class Registration
         $this->response = [];
     }
 
+    public static function clean($value = "")
+    {
+        $value = trim($value);
+        $value = str_replace(' ', '', $value);
+        $value = stripslashes($value);
+        $value = strip_tags($value);
+        $value = htmlspecialchars($value);
+
+        return $value;
+    }
+
+    public static function check_length($value = "", $min, $max)
+    {
+        $result = (mb_strlen($value) < $min || mb_strlen($value) > $max);
+        return $result;
+    }
+
     public function full_fields($login, $password, $confirm_password, $email, $name)
     {
+
+        $login = self::clean($login);
+        $password = self::clean($password);
+        $confirm_password = self::clean($confirm_password);
+        $email = self::clean($email);
+        $name = self::clean($name);
+
         $error_fields = [];
         $response = [];
 
-        if ($login === '') {
+        if ($login === '' || self::check_length($login, 6, 30)) {
             $error_fields[] = "login";
         }
-        if ($password === '') {
+        if ($password === '' || self::check_length($password, 6, 30) || !ctype_alnum($password)) {
             $error_fields[] = "password";
         }
-        if ($confirm_password === '') {
+        if ($confirm_password === '' || self::check_length($confirm_password, 6, 30) || !ctype_alnum($confirm_password)) {
             $error_fields[] = "confirm_password";
         }
         if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $error_fields[] = "email";
         }
-        if ($name === '') {
+        if ($name === '' || self::check_length($name, 2, 30) || !preg_match("/^[а-яА-ЯёЁa-zA-Z]+$/", $name)) {
             $error_fields[] = "name";
         }
 
@@ -66,6 +90,7 @@ class Registration
 
     public function check_unique_login($login)
     {
+        $login = self::clean($login);
         $check_login = $login;
 
         $database = file_get_contents("database/data.json");
@@ -90,6 +115,7 @@ class Registration
     public function check_unique_email($email)
     {
         $check_email = $email;
+        $email = self::clean($email);
         $database = file_get_contents("database/data.json");
         $array = json_decode($database, true);
 
@@ -112,6 +138,12 @@ class Registration
     public function registration($login, $password, $confirm_password, $email, $name)
     {
         if ($password === $confirm_password) {
+
+            $login = self::clean($login);
+            $password = self::clean($password);
+            $confirm_password = self::clean($confirm_password);
+            $email = self::clean($email);
+            $name = self::clean($name);
 
             if (file_exists('database/data.json')) {
                 $file = file_get_contents('database/data.json'); // Открыть файл data.json     

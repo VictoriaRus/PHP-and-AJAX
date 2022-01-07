@@ -14,15 +14,35 @@ class Auth
         $this->response = [];
     }
 
+    public static function clean($value = "")
+    {
+        $value = trim($value);
+        $value = str_replace(' ', '', $value);
+        $value = stripslashes($value);
+        $value = strip_tags($value);
+        $value = htmlspecialchars($value);
+
+        return $value;
+    }
+
+    public static function check_length($value = "", $min, $max)
+    {
+        $result = (mb_strlen($value) < $min || mb_strlen($value) > $max);
+        return $result;
+    }
+
     public function get_error_fields($login, $password)
     {
+        $login = self::clean($login);
+        $password = self::clean($password);
+        
         $error_fields = [];
         $response = [];
 
-        if ($login === '') {
+        if ($login === '' || self::check_length($login, 6, 30)) {
             $error_fields[] = "login";
         }
-        if ($password === '') {
+        if ($password === '' || self::check_length($password, 6, 30) || !ctype_alnum($password)) {
             $error_fields[] = "password";
         }
 
@@ -50,6 +70,11 @@ class Auth
 
     public function user_authorization($login, $password)
     {
+        $login = trim($login);
+        $login = str_replace(' ', '', $login);
+        $password = trim($password);
+        $password = str_replace(' ', '', $password);
+
         $response = [];
         $password = md5($password);
 
