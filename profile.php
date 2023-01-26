@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!$_SESSION['user']) {
-  header('Location: /');
+if (!$_SESSION["user"]) {
+  header("Location: /");
 }
 ?>
 
@@ -23,9 +23,9 @@ if (!$_SESSION['user']) {
       <div class="col-sm-6">
         <h5>Личная страничка пользователя</h5>
         <br>
-        <h2>Логин: <?= $_SESSION['user']['login'] ?></h2>
-        <p>Имя: <?= $_SESSION['user']['name'] ?></p>
-        <a href="#"><?= $_SESSION['user']['email'] ?></a>
+        <h2>Логин: <?= $_SESSION["user"]["login"] ?></h2>
+        <p>Имя: <?= $_SESSION["user"]["name"] ?></p>
+        <a href="#"><?= $_SESSION["user"]["email"] ?></a>
         <br>
         <br>
         <a href="/logout.php" class="btn btn-primary btn-block">Выход</a>

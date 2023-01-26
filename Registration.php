@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
+header("Content-Type: application/json; charset=utf-8");
 
 class Registration
 {
@@ -10,7 +10,6 @@ class Registration
     public $name;
     public $response;
 
-    // Конструктор
     public function __construct($login, $password, $confirm_password, $email, $name)
     {
         $this->login = $login;
@@ -24,7 +23,7 @@ class Registration
     public static function clean($value = "")
     {
         $value = trim($value);
-        $value = str_replace(' ', '', $value);
+        $value = str_replace(" ", "", $value);
         $value = stripslashes($value);
         $value = strip_tags($value);
         $value = htmlspecialchars($value);
@@ -50,19 +49,19 @@ class Registration
         $error_fields = [];
         $response = [];
 
-        if ($login === '' || self::check_length($login, 6, 30)) {
+        if ($login === "" || self::check_length($login, 6, 30)) {
             $error_fields[] = "login";
         }
-        if ($password === '' || self::check_length($password, 6, 30) || !ctype_alnum($password)) {
+        if ($password === "" || self::check_length($password, 6, 30) || !ctype_alnum($password)) {
             $error_fields[] = "password";
         }
-        if ($confirm_password === '' || self::check_length($confirm_password, 6, 30) || !ctype_alnum($confirm_password)) {
+        if ($confirm_password === "" || self::check_length($confirm_password, 6, 30) || !ctype_alnum($confirm_password)) {
             $error_fields[] = "confirm_password";
         }
-        if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if ($email === "" || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $error_fields[] = "email";
         }
-        if ($name === '' || self::check_length($name, 2, 30) || !preg_match("/^[а-яА-ЯёЁa-zA-Z]+$/", $name)) {
+        if ($name === "" || self::check_length($name, 2, 30) || !preg_match("/^[а-яА-ЯёЁa-zA-Z]+$/", $name)) {
             $error_fields[] = "name";
         }
 
@@ -70,20 +69,23 @@ class Registration
             $response = [
                 "status" => false,
                 "type" => 1,
-                "message" => 'Заполните правильно поля',
+                "message" => "Заполните правильно поля",
                 "fields" => $error_fields
             ];
 
             echo json_encode($response);
             die();
+
             return $response;
+
         } else {
             $response = [
                 "status" => true,
                 "type" => 4,
-                "message" => 'Все поля заполнены',
+                "message" => "Все поля заполнены",
                 "fields" => $error_fields
             ];
+
             return $response;
         }
     }
@@ -97,16 +99,18 @@ class Registration
         $array = json_decode($database, true);
 
         foreach ($array as $data) {
-            if ($data['login'] === $check_login) {
+
+            if ($data["login"] === $check_login) {
                 $response = [
                     "status" => false,
                     "type" => 1,
                     "message" => "Такой логин уже существует",
-                    "fields" => ['login']
+                    "fields" => ["login"]
                 ];
 
                 echo json_encode($response);
                 die();
+
                 return $response;
             }
         }
@@ -120,16 +124,18 @@ class Registration
         $array = json_decode($database, true);
 
         foreach ($array as $data) {
-            if ($data['email'] === $check_email) {
+
+            if ($data["email"] === $check_email) {
                 $response = [
                     "status" => false,
                     "type" => 1,
                     "message" => "Такой email уже существует",
-                    "fields" => ['email']
+                    "fields" => ["email"]
                 ];
 
                 echo json_encode($response);
                 die();
+
                 return $response;
             }
         }
@@ -145,14 +151,18 @@ class Registration
             $email = self::clean($email);
             $name = self::clean($name);
 
-            if (file_exists('database/data.json')) {
-                $file = file_get_contents('database/data.json'); // Открыть файл data.json     
-                $taskList = json_decode($file, TRUE); // Декодировать в массив                     
-                unset($file); // Очистить переменную $file
+            if (file_exists("database/data.json")) {
+                $file = file_get_contents("database/data.json");    
+                $taskList = json_decode($file, TRUE);                    
+                unset($file);
                 $password = md5($password);
                 $confirm_password = md5($confirm_password);
-                $taskList[] = array('login' => $login, 'password' => $password, 'confirm_password' => $confirm_password, 'email' => $email, 'name' => $name); // Представить новую переменную как элемент массива, в формате 'ключ'=>'имя переменной'
-                file_put_contents('database/data.json', json_encode($taskList, JSON_UNESCAPED_UNICODE));  // Перекодировать в формат и записать в файл.       
+                $taskList[] = array("login" => $login, 
+                                    "password" => $password, 
+                                    "confirm_password" => $confirm_password, 
+                                    "email" => $email, 
+                                    "name" => $name); 
+                file_put_contents("database/data.json", json_encode($taskList, JSON_UNESCAPED_UNICODE));      
                 unset($taskList);
             }
 
@@ -161,6 +171,7 @@ class Registration
                 "message" => "Регистрация прошла успешно!",
             ];
             echo json_encode($response);
+
             return $response;
         } else {
             $response = [
@@ -168,6 +179,7 @@ class Registration
                 "message" => "Пароли не совпадают",
             ];
             echo json_encode($response);
+            
             return $response;
         }
     }

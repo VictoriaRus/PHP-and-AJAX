@@ -32,7 +32,6 @@ if (isset($_SESSION['user'])) {
           Email*<input type="email" name="email" placeholder="Введите email" class="form-control" /><br>
           Имя*   <small>(минимум 2 символа: только буквы)</small>
           <input type="text" name="name" placeholder="Введите имя" class="form-control" /><br>
-          
           <input type="button" id="register-btn" value="Зарегистрироваться" class="btn btn-primary btn-block" />
           <p>
             У вас уже есть аккаунт? - <a href="/">Авторизируйтесь</a>!

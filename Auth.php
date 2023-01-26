@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
+header("Content-Type: application/json; charset=utf-8");
 
 class Auth
 {
@@ -17,7 +17,7 @@ class Auth
     public static function clean($value = "")
     {
         $value = trim($value);
-        $value = str_replace(' ', '', $value);
+        $value = str_replace(" ", "", $value);
         $value = stripslashes($value);
         $value = strip_tags($value);
         $value = htmlspecialchars($value);
@@ -39,10 +39,10 @@ class Auth
         $error_fields = [];
         $response = [];
 
-        if ($login === '' || self::check_length($login, 6, 30)) {
+        if ($login === "" || self::check_length($login, 6, 30)) {
             $error_fields[] = "login";
         }
-        if ($password === '' || self::check_length($password, 6, 30) || !ctype_alnum($password)) {
+        if ($password === "" || self::check_length($password, 6, 30) || !ctype_alnum($password)) {
             $error_fields[] = "password";
         }
 
@@ -50,7 +50,7 @@ class Auth
             $response = [
                 "status" => false,
                 "type" => 1,
-                "message" => 'Проверте правильность полей',
+                "message" => "Проверте правильность полей",
                 "fields" => $error_fields
             ];
 
@@ -61,7 +61,7 @@ class Auth
             $response = [
                 "status" => true,
                 "type" => 4,
-                "message" => 'Все поля заполнены',
+                "message" => "Все поля заполнены",
                 "fields" => $error_fields
             ];
             return $response;
@@ -71,9 +71,9 @@ class Auth
     public function user_authorization($login, $password)
     {
         $login = trim($login);
-        $login = str_replace(' ', '', $login);
+        $login = str_replace(" ", "", $login);
         $password = trim($password);
-        $password = str_replace(' ', '', $password);
+        $password = str_replace(" ", "", $password);
 
         $response = [];
         $password = md5($password);
@@ -82,21 +82,21 @@ class Auth
         $array = json_decode($string, true);
         $flag = false;
 
-        $find_email = '0';
-        $find_name = '0';
+        $find_email = "0";
+        $find_name = "0";
         foreach ($array as $data) {
-            if ($data['login'] === $login && $data['password'] === $password) {
+            if ($data["login"] === $login && $data["password"] === $password) {
 
                 for ($i = 0; $i < count($array); $i++) {
                     for ($j = 0; $j < count($array[$i]); $j++) {
-                        if ($array[$i]['login'] === $login) {
-                            $find_name = $array[$i]['name'];
-                            $find_email = $array[$i]['email'];
+                        if ($array[$i]["login"] === $login) {
+                            $find_name = $array[$i]["name"];
+                            $find_email = $array[$i]["email"];
                         }
                     }
                 }
 
-                $_SESSION['user'] = [
+                $_SESSION["user"] = [
                     "login" => $login,
                     "name" => $find_name,
                     "email" => $find_email
@@ -106,7 +106,7 @@ class Auth
                     "status" => true
                 ];
                 echo json_encode($response);
-                //exit();
+                
                 return $response;
             } else {
                 $flag = true;
@@ -116,10 +116,10 @@ class Auth
         if ($flag === true) {
             $response = [
                 "status" => false,
-                "message" => 'Не верный логин или пароль'
+                "message" => "Не верный логин или пароль"
             ];
             echo json_encode($response);
             return $response;
         }
     }
-}//конец class
+}
