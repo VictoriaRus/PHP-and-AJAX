@@ -11,6 +11,7 @@ This is a Rest application: registration and authorization with a personal user 
 - Server: PHP.
 - Front: AJAX.
 - Database: json file.
+
 The application has form validation.
 
 ### Links to used libraries
