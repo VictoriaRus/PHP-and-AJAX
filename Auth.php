@@ -28,6 +28,7 @@ class Auth
     public static function check_length($value = "", $min, $max)
     {
         $result = (mb_strlen($value) < $min || mb_strlen($value) > $max);
+
         return $result;
     }
 
@@ -56,6 +57,7 @@ class Auth
 
             echo json_encode($response);
             die();
+
             return $response;
         } else {
             $response = [
@@ -64,6 +66,7 @@ class Auth
                 "message" => "Все поля заполнены",
                 "fields" => $error_fields
             ];
+
             return $response;
         }
     }
@@ -84,7 +87,9 @@ class Auth
 
         $find_email = "0";
         $find_name = "0";
+
         foreach ($array as $data) {
+
             if ($data["login"] === $login && $data["password"] === $password) {
 
                 for ($i = 0; $i < count($array); $i++) {
@@ -119,6 +124,7 @@ class Auth
                 "message" => "Не верный логин или пароль"
             ];
             echo json_encode($response);
+            
             return $response;
         }
     }
